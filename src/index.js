@@ -6,9 +6,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		var button = document.createElement("button")
 		var goodDogFilter = document.querySelector("#good-dog-filter")
 		console.dir(goodDogFilter)
-
+		const formContainer = document.querySelector(".container")
 		const dogNameCard = document.createElement('div')    
 		let goodDog = false 
+		const submitButton = document.querySelector('#submit')
+		console.log(submitButton)
 
 		goodDogFilter.addEventListener("click", (e) => {
 			if(e.target.innerText.includes("OFF")){
@@ -35,8 +37,28 @@ document.addEventListener('DOMContentLoaded', (event) => {
 	   	}
 		}
 
+		document.addEventListener('submit', (e) => {
+			e.preventDefault()
+			const formName = e.target[0].value
+			const formImage = e.target[1].value
+			postDog(formName, formImage)
+		})
 
-
+		const postDog = (name, img) => {
+			fetch(url, {
+				method: 'POST',
+				headers: {
+				'Content-type': 'application/json',
+				'Accept': 'application/json'
+				},
+				body: JSON.stringify({
+					name: name,
+					image: img
+				})
+			})
+			.then(resp => resp.json())
+			.then(resp => console.log(resp))
+		}
 
 
 		const renderDogs = (dog) => {
@@ -92,8 +114,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 						console.log("bad")
 					}
 				}
-
-
 		}
+
+
 });
 
