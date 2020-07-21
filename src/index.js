@@ -1,78 +1,110 @@
 document.addEventListener('DOMContentLoaded', (e) => {
-    const dogsUrl = "http://localhost:3000/pups"
-    const dogInfo = document.querySelector('#dog-info')
+    const dogBarDiv = document.getElementById('dog-bar')
+    const dogInfoDiv = document.querySelector('#dog-info')
+    const filterButton = document.getElementById('good-dog-filter')
+    const baseUrl = "http://localhost:3000/pups"
+    let allDogs = []
 
-    
 
+    function fetchPups(){
+        fetch(baseUrl)
+        .then(resp => (resp.json())
+        .then(function(json){
+            let dogsArray = json
+            dogsArray.forEach(dog => addSpan(dog))
+            dogsArray.forEach(dog => allDogs.push(dog))
+        })
 
-
-    function fetchDogs(){
-        fetch(dogsUrl)
-        .then(resp => resp.json())
-        .then(dogs => {renderDogs(dogs), eventHandler(dogs)})
+        )
+        //console.log(allDogs)
     }
-    
-    fetchDogs();
-    eventHandler();
 
-    function renderDogs (dogs){
-        dogs.forEach (dog => {
-        let newDogSpan = document.createElement('span')
-        const dogBar = document.querySelector('#dog-bar')
-        newDogSpan.innerText = dog.name
-        newDogSpan.dataset = 'dogID'
-        newDogSpan.dataset.id = dog.id;
-        dogBar.appendChild(newDogSpan) 
+    function addSpan(dog){
+        const dogSpan = document.createElement('span')
+        dogSpan.innerText = dog.name
+        dogBarDiv.append(dogSpan)
+
+    }
+
+    function addDogInfo(dogName){
+        allDogs.forEach(dog => {
+            if(dog.name === dogName){
+            const h2 = document.createElement('h2')
+            h2.innerText = dog.name
+            const image = document.createElement('img')
+            image.src = dog.image
+            const button = document.createElement('button')
+            button.dataset.purpose = "toggle"
+            button.dataset.id = dog.id
+            if(dog.isGoodDog == true){
+                button.innerText = "Good Dog!"
+            } else{
+                button.innerText = "Bad Dog!"
+            }
+            dogInfoDiv.append(h2, image, button)
+
+            }
         })
     }
 
-    function eventHandler(dogs){
+    function dogBarListner(){
+    dogBarDiv.addEventListener("click", function(e){
+        if (e.target.matches ('span')){
+            addDogInfo(e.target.innerText)
+            dogButtonListener()
+        } 
+    })
+    }
+
+    function dogButtonListener(){
         document.addEventListener("click", function(e){
-            if(e.target.tagName === 'SPAN'){
-                let newDogSpan = e.target
-                let pup = dogs.find(dog => dog.name === newDogSpan.innerText);
-                renderDogInfo(pup)                
+            e.preventDefault(e)
+            if (e.target.dataset.purpose === "toggle"){
+                let toggleButton = e.target
+                if (toggleButton.innerText === "Good Dog!"){
+                    toggleButton.innerText = "Bad Dog!"
+                } else if (toggleButton.innerText === "Bad Dog!"){
+                    toggleButton.innerText = "Good Dog!"
+                } 
+                let id = toggleButton.dataset.id
+                console.log(id)
+                let dogToUpdate = allDogs.filter(dog => dog.id === id)
+                
+                // newStatus(dogToUpdate)
+                 
+
+                
+                // fetch(`${baseUrl}/${pup.id}`)
+
+                
+    
             }
-            let dogButton = document.querySelectorAll('button')[1]
-            if(e.target == dogButton){
-            let pupname = document.querySelector('h2').innerText
-            let pup = dogs.find(dog => dog.name === pupname);
-            updateDogStatus(pup)
-            }
+
         })
+
     }
 
-    function renderDogInfo(pup){
-        if(pup.isGoodDog == true){
-        dogInfo.innerHTML = `
-                <h2>${pup.name}</h2>
-                <img src=${pup.image}>
-                <button>Good Dog!</button>
-               `
-        }else{
-        dogInfo.innerHTML = `
-                <h2>Name: ${pup.name}</h2>
-                <img src=${pup.image}>
-                <button>Bad Dog!</button>
-               `
+    function newStatus(dogToUpdate){
+        if(dogToUpdate.isGoodDog === false){
+            let changeStatus = true
         }
-    }
-
-    function updateDogStatus(pup){
-        if(pup.isGoodDog == true){
-            dogInfo.innerHTML = `
-            <h2>Name: ${pup.name}</h2>
-            <img src=${pup.image}>
-            <button>Bad Dog!</button>
-           `
-        }else if(pup.isBadDog == false){
-            dogInfo.innerHTML = `
-            <h2>Name: ${pup.name}</h2>
-            <img src=${pup.image}>
-            <button>Good Dog!</button>
-           `
+        else if(dogToUpdate.isGoodDog === true){
+            let changeStatus = false
         }
-        
+        fetch(`${baseUrl}/${id}`), {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify ({
+                'isGoodDog': changeStatus
+            })
+        }
+    } 
 
-    }
+
+    fetchPups()
+    dogBarListner()
+
 });
