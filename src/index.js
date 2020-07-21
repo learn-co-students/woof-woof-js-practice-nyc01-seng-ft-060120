@@ -67,9 +67,18 @@ document.addEventListener('DOMContentLoaded', (e) => {
                     toggleButton.innerText = "Good Dog!"
                 } 
                 let id = toggleButton.dataset.id
-                console.log(id)
-                let dogToUpdate = allDogs.filter(dog => dog.id === id)
-                
+            
+                let newValue = (toggleButton.innerText === `Good Dog!` ) ? true : false;
+                fetch(`${baseUrl}/${id}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify ({
+                        'isGoodDog': newValue
+                    })
+                })
                 // newStatus(dogToUpdate)
                  
 
@@ -83,25 +92,30 @@ document.addEventListener('DOMContentLoaded', (e) => {
         })
 
     }
-
-    function newStatus(dogToUpdate){
-        if(dogToUpdate.isGoodDog === false){
-            let changeStatus = true
-        }
-        else if(dogToUpdate.isGoodDog === true){
-            let changeStatus = false
-        }
-        fetch(`${baseUrl}/${id}`), {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify ({
-                'isGoodDog': changeStatus
+    filterButton.addEventListener("click", function(e) {
+        const thisButton = e.target
+        if (thisButton.innerText === "Filter good dogs: OFF") {
+            thisButton.innerText = "Filter good dogs: ON"
+            // console.log(allDogs)
+            dogBarDiv.innerHTML = ''
+            allDogs.forEach(dog => {
+                
+                if (dog.isGoodDog === true) {
+                    addSpan(dog)
+                }
+              
             })
+            
+        } else if (thisButton.innerText === "Filter good dogs: ON") {
+            thisButton.innerText = "Filter good dogs: OFF"
+            dogBarDiv.innerHTML = ''
+            allDogs.forEach(dog => {
+                addSpan(dog)
+            })
+         
         }
-    } 
+
+    })
 
 
     fetchPups()
