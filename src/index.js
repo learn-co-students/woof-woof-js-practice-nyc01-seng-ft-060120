@@ -32,7 +32,6 @@ let renderPup = (pup) => {
     span.textContent = `${pup.name}`
     dogBar.appendChild(span)
     span.addEventListener('click', (e) => {
-        display.innerHTML = ''
         display.innerHTML = `
         <img src=${pup.image}>
         <h2>${pup.name}</h2>
@@ -70,6 +69,8 @@ let swapButton = (pup) => {
     bttn.innerHTML = `${pup.isGoodDog ? "Good Dog!" : "Bad Dog!"}`
     if (filterBool) {
         fetchPupsFiltered()
+    } else {
+        fetchPups()
     }
 }
 
