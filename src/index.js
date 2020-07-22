@@ -10,7 +10,7 @@ const fetchDogs = () => {
 }
 
 const setFilter = () => {
-  let filterBtn = document.querySelector("#good-dog-filter");
+  const filterBtn = document.querySelector("#good-dog-filter");
   filterBtn.dataset.status = false;
 }
 
@@ -42,9 +42,9 @@ const showDogHandler = (dog) => {
 
   dogImg.src = dog.image;
   pupName.innerHTML = dog.name;
+  dogContainer.id = 'dog-info'
 
-  pupName.appendChild(judgeDogBttn)
-  dogContainer.append(pupName, dogImg);
+  dogContainer.append(pupName, judgeDogBttn, dogImg);
   dogSummaryContainer.appendChild(dogContainer);
 
   judgeDogDisplay(judgeDogBttn, dog)
@@ -52,8 +52,8 @@ const showDogHandler = (dog) => {
 }
 
 const judgeDogDisplay = (judgeDogBttn, dog) => {
-  !!dog.isGoodDog === true ? judgeDogBttn.innerHTML = "THIS IS A GOOD DOG" :
-  judgeDogBttn.innerHTML = "THIS IS NOT A GOOD DOG";
+  !!dog.isGoodDog === true ? judgeDogBttn.innerHTML = "GOOD DOG" :
+  judgeDogBttn.innerHTML = "BAD DOG";
 }
 
 const goodDogHandler = (judgeDogBttn, dog) => {
