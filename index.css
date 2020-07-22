@@ -48,6 +48,10 @@
   max-height: 25vw;
 }
 
+.bad-dog {
+  display: none;
+}
+
 body {
   margin: 0;
 }
