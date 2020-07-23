@@ -19,13 +19,9 @@ document.addEventListener('DOMContentLoaded', function(){
     function renderPups(pups){
         pups.forEach(pup =>{
             const pupSpan = document.createElement('span')
-            pupSpan.className = 'pup-span'
             pupSpan.id = `${pup.id}`
             pupSpan.textContent = `${pup.name}`
             dogBarDiv.append(pupSpan)
-            pupSpan.addEventListener('click', function(e){
-                pupInfo(pup)
-            })
         })
     }
 
@@ -44,14 +40,23 @@ document.addEventListener('DOMContentLoaded', function(){
     //  <h2>Mr. Bonkers</h2>
     //  <button>Good Dog!</button>
 
+    const dogInfoDiv = document.querySelector("#dog-info")
+    const pupSpan = document.getElementsByClassName('span')
+    document.addEventListener('click', function(e){
+            // document.addEventListener('click', function(e){
+    //             // we need the id
+    //             //fetch pups/id
+    //             //render pupobject infor in the div
+    // });
+        if (e.target.id === pupSpan.id)
 
-    function pupInfo(pup){
-        const dogInfoDiv = document.querySelector("#dog-info")
         dogInfoDiv.innerHTML = `
         <img src=${pup.image} >
         <h2>${pup.name}</h2>
         <button>${pup.isGoodDog}</button>`
-    }
+        
+    })
+
 
 
 
